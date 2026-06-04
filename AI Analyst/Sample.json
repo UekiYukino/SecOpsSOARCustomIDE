@@ -1,0 +1,32 @@
+{
+  "verdict": "SUSPICIOUS",
+  "confidence": "Medium",
+  "investigation_notes": "On 2026-06-04 at 09:12:33 UTC, host WIN-CORP-042 (192.168.10.42) triggered a process creation alert. The event shows cmd.exe spawned by excel.exe (PID 4812 → PID 6204), which is atypical for standard office use and consistent with macro-based execution. The command line includes a PowerShell download cradle: 'powershell.exe -enc JABjAGwAaQBlA...'. The encoded payload could not be decoded within the available evidence. No network connection event was observed in the dataset to confirm successful staging. The detection rule 'Suspicious Office Child Process' aligns with the observed behavior. Confidence is Medium due to absence of a follow-on network or file write event to confirm payload execution.",
+  "recommended_actions": [
+    "Collect and decode the Base64-encoded PowerShell command from the raw event",
+    "Review web proxy / DNS logs for 192.168.10.42 in the ±30 minute window around 09:12 UTC",
+    "Pull the Excel file that spawned the process and submit to sandbox for detonation",
+    "Isolate WIN-CORP-042 if lateral movement or C2 beaconing is confirmed"
+  ],
+  "key_observations": [
+    "excel.exe spawning cmd.exe is a known macro execution indicator",
+    "PowerShell invoked with -enc flag indicating encoded payload",
+    "No follow-on network event observed in the provided dataset",
+    "Detection rule name matches observed behavior pattern"
+  ],
+  "evidence": [
+    "Event ID 4688 — New Process Creation: excel.exe → cmd.exe on WIN-CORP-042 at 09:12:33 UTC",
+    "Command line: powershell.exe -NonI -W Hidden -enc JABjAGwAaQBlA...",
+    "Creator Process: C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE",
+    "User context: CORP\\jsmith (non-privileged user account)"
+  ],
+  "model": "gpt-4o",
+  "provider": "openai",
+  "usage": {
+    "prompt_tokens": 1842,
+    "completion_tokens": 387,
+    "total_tokens": 2229
+  },
+  "event_count": 3,
+  "input_mode": "events_array"
+}
