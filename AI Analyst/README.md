@@ -10,6 +10,8 @@ A custom Google SecOps (Chronicle SOAR) action that submits security event data 
 
 The action accepts a JSON blob of security events (raw SIEM events, pre-extracted fields, or wrapped event arrays), builds an analysis prompt, and returns a structured JSON result containing a verdict, confidence level, investigation notes, key observations, evidence items, and recommended actions.
 
+Best integrated with the Output from `QRadar - QRadar AQL Search` Action
+
 ***
 
 ## Prerequisites
