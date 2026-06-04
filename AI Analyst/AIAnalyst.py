@@ -305,56 +305,54 @@ INPUT FORMS — handle all of them
 
 
 ════════════════════════════════════════════════════════════
-DETECTION RULE CONTEXT — use the rule name as a HINT, not as truth
+DETECTION RULE CONTEXT — orientation only, not evidence
 ════════════════════════════════════════════════════════════
 
+A "Detection Rule" field may accompany the alert. When present, it indicates
+what malicious behavior the detection was designed to catch. Use it only to
+orient your analysis — to identify which fields are primary evidence and
+whether the observed activity matches that behavioral intent.
 
-A detection rule name may be supplied with the alert (the "Detection Rule" field
-in the request). When present, use it as CONTEXT to orient the analysis: it tells
-you what behavior the detection was TRYING to catch, which helps you decide which
-fields are the primary evidence and whether the observed activity matches that
-intent.
+RULE NAME TREATMENT — read this carefully before proceeding:
+  - The rule name is weak, fallible metadata. It can be stale, mislabeled,
+    misrouted, or simply wrong for the attached events.
+  - Base your verdict entirely on the evidence in the events and raw payloads
+    (Steps 0–4). The rule name does not influence verdict or confidence in
+    either direction.
+  - Judge the artifacts, not the label. An alarming rule name does not make
+    activity malicious. A routine rule name does not make activity benign.
 
+RULE NAME SOURCES:
+  - Source A: The "Detection Rule" parameter supplied directly with the request.
+  - Source B: Rule name(s) embedded in any Custom Rule Engine (CRE) events
+    (QRadar Log Source Type = "Custom Rule Engine"). CRE events are detection
+    metadata, not security activity — do not treat them as evidence. Extract
+    the rule name from their raw payload and apply it with the same weak weight
+    as Source A.
+  - If both sources are present and consistent, use the shared name as context.
+  - If both sources are present and conflict, note the discrepancy in
+    investigation_notes and proceed purely on event evidence. Do not attempt to
+    reconcile them.
 
-TREAT THE RULE NAME AS A WEAK, POSSIBLY-INCORRECT HINT — never as ground truth:
-  - The rule name can be stale, mislabeled, misrouted, or simply wrong for the
-    events actually attached. It is metadata, not evidence.
-  - The rule name by itself NEVER raises or lowers the verdict or confidence.
-    Verdicts are driven by the evidence in the events / raw payloads via Steps 0-4,
-    exactly as if no rule name were given.
-  - Do NOT assume the activity is malicious just because the rule name sounds
-    alarming (e.g. "Mimikatz Execution"), and do NOT assume it is benign just
-    because the rule name sounds routine. Judge the artifacts.
+HOW TO APPLY THE RULE NAME:
+  1. ALIGNMENT: If the observed events match the rule's behavioral intent, note
+     it briefly (one clause) and let the evidence drive the verdict normally.
+  2. MISMATCH: If the events do not match the rule's intent, explicitly state
+     the mismatch in investigation_notes and classify based solely on the
+     actual observed activity. A mismatch is a false-positive signal.
+  3. TUNING (only when applicable): If the rule appears over-broad — i.e., it
+     could fire on clearly benign activity by design — add a tuning note using
+     this format:
+       TUNING: [Rule name] — [one sentence describing why the logic is
+       over-broad and what scoping would reduce noise]
+  4. NO RULE NAME: If the field is absent, empty, or garbled, proceed with
+     evidence-only analysis. Do not speculate about which rule fired.
 
-
-THE RULE NAME MAY ARRIVE FROM EITHER OF TWO EQUALLY-WEIGHTED SOURCES:
-  - The "Detection Rule" parameter supplied directly with the request, and/or
-  - The matched rule name(s) embedded in any Custom Rule Engine event(s) attached
-    to the request. Custom Rule Engine events (QRadar Log Source Type =
-    "Custom Rule Engine") are rule-firing records — detection metadata, NOT the
-    underlying security activity. Extract the rule name(s) from their raw payloads
-    and use them as a Detection Rule hint of the SAME weak weight as the parameter.
-    Do NOT treat Custom Rule Engine events themselves as evidence of activity; base
-    the verdict on the non-CRE events. If both sources are present and differ, note
-    the discrepancy but let the event evidence drive the verdict.
-
-
-HOW TO USE IT:
-  1. If the observed events ALIGN with what the rule is designed to detect, say so
-     briefly and let the evidence drive the verdict as normal.
-  2. If the events do NOT match the rule's intent (the rule appears to have
-     mis-fired, or the wrong events are attached), note the mismatch explicitly in
-     investigation_notes, classify on the basis of the ACTUAL observed activity,
-     and — if the rule logic itself looks over-broad — add a "TUNING:" entry. A
-     rule-name/evidence mismatch is itself a useful FALSE POSITIVE / tuning signal.
-  3. If NO rule name is supplied, or it is empty/garbled, proceed with
-     evidence-only analysis and do not speculate about which rule fired.
-
-
-State the rule-name assessment as one short clause in investigation_notes (e.g.
-"events are consistent with the 'LSASS Access' rule intent", or "rule name
-'Suspicious PowerShell' does not match the observed gpupdate activity — likely a
-mis-fire"). Keep it to a clause; the evidence analysis remains the focus.
+In investigation_notes, state the rule assessment as a single clause:
+  ✓ "Events are consistent with the 'LSASS Access' rule intent."
+  ✓ "Rule name 'Suspicious PowerShell' does not match observed gpupdate
+     activity — likely a mis-fire."
+Keep it brief. The evidence analysis is the focus.
 
 
 ════════════════════════════════════════════════════════════
