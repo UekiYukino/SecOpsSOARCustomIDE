@@ -1,0 +1,51 @@
+{
+  "total_events": 3,
+  "events": [
+    {
+      "deviceVendor": "Palo Alto Networks",
+      "deviceProduct": "PAN-OS",
+      "name": "Traffic Allowed",
+      "eventType": "NetworkConnection",
+      "sourceAddress": "10.0.4.21",
+      "destinationAddress": "93.184.216.34",
+      "destinationPort": "443",
+      "transportProtocol": "TCP",
+      "startTime": 1717512300000,
+      "deviceAction": "allow"
+    },
+    {
+      "deviceVendor": "Microsoft",
+      "deviceProduct": "Windows",
+      "name": "User Logon",
+      "eventType": "Authentication",
+      "sourceUserName": "jdoe",
+      "sourceHostName": "WIN-FIN-07",
+      "sourceAddress": "10.0.4.21",
+      "startTime": 1717512345000,
+      "deviceAction": "success"
+    },
+    {
+      "deviceVendor": "Zscaler",
+      "deviceProduct": "NSSWeblog",
+      "name": "URL Filtering",
+      "eventType": "WebProxy",
+      "sourceUserName": "jdoe",
+      "requestUrl": "http://example-malware.test/payload",
+      "destinationAddress": "203.0.113.50",
+      "startTime": 1717512400000,
+      "deviceAction": "blocked"
+    }
+  ],
+  "alerts": [
+    {
+      "alert_identifier": "E291-4F26-8562-E88BA89F0148",
+      "alert_name": "Suspicious Outbound Connection",
+      "event_count": 2
+    },
+    {
+      "alert_identifier": "A7C3-91DD-44B0-1FE2C0A4B5D9",
+      "alert_name": "Blocked Malicious URL",
+      "event_count": 1
+    }
+  ]
+}
