@@ -50,7 +50,7 @@ In the integration editor, add the following configuration parameters. The **Par
 | `model_name`      | Model Name           | String   | Yes      | The model identifier to use for inference (e.g., `gpt-4o`, `claude-3-5-sonnet-20241022`). |
 | `provider`        | Provider             | String   | Yes      | One of: `openai`, `anthropic`, `gemini`, `azure`. Must be lowercase. |
 | `system_prompt`   | System Prompt        | String   | No       | Optional override for the built-in investigation system prompt. Leave blank to use the built-in prompt. |
-| `max_tokens`      | Max Tokens           | Integer  | No       | Maximum tokens to generate in the response. Default: `1024`. |
+| `max_completion_tokens`      | Max Completion Tokens           | Integer  | No       | Maximum tokens to generate in the response. Default: `1024`. |
 | `temperature`     | Temperature          | Float    | No       | Sampling temperature. Default: `0.2`. Lower values produce more deterministic output. |
 | `request_timeout` | Request Timeout (s)  | Integer  | No       | HTTP request timeout in seconds. Default: `60`. |
 | `api_version`     | API Version          | String   | No       | Required for Azure OpenAI only (e.g., `2024-02-01`). Leave blank for all other providers. |
